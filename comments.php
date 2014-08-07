@@ -8,6 +8,11 @@
  * @package cherrystyle
  */
 
+/* id & class :
+comment div :class : 	comments-box, 	id : comments-75
+respond div :class : 	respond-block, 	id : respond-block-75
+form :		 class : 	comment-form, 	id : commentform-inactive	//To be compatible with ajaxify
+*/
 /*
  * If the current post is protected by a password and
  * the visitor has not yet entered the password we will
@@ -18,7 +23,7 @@ if ( post_password_required() ) {
 }
 ?>
 
-<div id="comments" class="comments-area">
+<div id="comments" class="comments-box">
 
 	<?php if ( have_comments() ) : ?>
 
@@ -64,7 +69,7 @@ if ( post_password_required() ) {
 
 
 <?php if ( comments_open() ) : ?>
-	<div id="respond-block">
+	<div id="respond-block" class="repond-block">
 		<?php //Si l'utilisateur est logué, on place son image avant le comment_field
 		$avatar = '';
 		$isLogged = '';
@@ -82,8 +87,10 @@ if ( post_password_required() ) {
 
 
 		$args = array(
+			//'id_form' => 'commentform',	
+
 			'comment_field' =>  '<p class="comment-form-comment '.$isLogged.'"><label for="comment">' . _x( 'Comment', 'noun' ) .
-		    '</label><input id="comment" name="comment" type="text" required value="Écrire un commentaire..." data-help="Écrire un commentaire..." size="30"' . $aria_req . ' /></p>',
+		    '</label><input id="comment" name="comment" type="text" required placeHolder="Écrire un commentaire..." size="30"' . $aria_req . ' /></p>',
 		    
 		    'logged_in_as' => '<div class="comment-author vcard">'.$avatar.'</div>',
 		    
@@ -97,17 +104,17 @@ if ( post_password_required() ) {
 			      '<p class="comment-form-author">' .
 			      '<label for="author">' . __( 'Name', 'domainreference' ) . '</label> ' .
 			      ( $req ? '<span class="required">*</span>' : '' ) .
-			      '<input id="author" name="author" type="text" required value="Entrez votre nom..." data-help="Entrez votre nom..." size="30"' . $aria_req . ' /></p>',
+			      '<input id="author" name="author" type="text" required placeHolder="Entrez votre nom..." size="30"' . $aria_req . ' /></p>',
 
 			    'email' =>
 			      '<p class="comment-form-email"><label for="email">' . __( 'Email', 'domainreference' ) . '</label> ' .
 			      ( $req ? '<span class="required">*</span>' : '' ) .
-			      '<input id="email" name="email" type="email" required value="Entrez votre email..." data-help="Entrez votre email..." size="30"' . $aria_req . ' /></p>',
+			      '<input id="email" name="email" type="email" required placeHolder="Entrez votre email..." size="30"' . $aria_req . ' /></p>',
 
 			    'url' =>
 			      '<p class="comment-form-url"><label for="url">' .
 			      __( 'Website', 'domainreference' ) . '</label>' .
-			      '<input id="url" name="url" type="url" value="Entrez votre site web..." data-help="Entrez votre site web..." size="30" /></p>'
+			      '<input id="url" name="url" type="url" placeHolder="Entrez votre site web..." size="30" /></p>'
 			    ) 
 
 		    );

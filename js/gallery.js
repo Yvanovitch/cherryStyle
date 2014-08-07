@@ -19,7 +19,10 @@ Mettre en fixed même quand l'image n'est pas assez grande pour faire une transi
 //?Tester retour arrière si pas assez descendu --> Ralentir le délifement de l'image pour indiquer qu'on y arrive
 Si l'user est sur un mobile, n'envoyer que les petites images, pas les full
 Charger les images de manières asynchrone
-Corriger Ajaxify qui ne fonctionne pas sur plusieurs articles en même temps >> http://wordpress.org/support/topic/multiple-comment-forms-on-a-single-page
+
+//Voir pourquoi Ajaxify ne fonctionne pas sur plusieurs articles en même temps >> http://wordpress.org/support/topic/multiple-comment-forms-on-a-single-page
+//Lier le nouveau form à l'envoi par "Entrer" : http://wordpress.org/plugins/wp-ajaxify-comments/faq/ -> OnAfterUpdateComments
+Charger les commentaires à la demande
 
 Rapide :
 //Quand on fait play, ne compter que le temps nécessaire, pas total
@@ -36,7 +39,7 @@ Quand user poste un commentaire, afficher à gauche le formulaire pour entrer se
 Choisir avec une variable d'afficher les images portrait redimentionné
 Lorsqu'on a cliqué sur l'aide et qu'on clique à côté, enlever l'aide
 Mettre un flou autour des images
-Changer système qui check les inputs par placeHolder -> http://www.scottohara.me/article/mini-demos.html
+//Changer système qui check les inputs par placeHolder -> http://www.scottohara.me/article/mini-demos.html
 
 -> Comments :
 Quand on clique n'importe où dans un champ, toujours entrer en mode édition
@@ -58,8 +61,10 @@ Bug :
 //Quand on quitte le fullscreen, mettre à jour l'icône
 //Passer les images en background-image
 //Pouvoir utiliser espace dans les commentaires
-Corriger l'icône de plein écran
-
+//Corriger l'icône de plein écran
+Affichage de la dernière image lorsqu'elle est en trop petite, manque de marge :s
+//Drôle de marge pour certaines images
+Lorsqu'on utilise la scrollBar, ne pas faire les transition
 
 Plus : 
 Utiliser un framework MVC !!!
@@ -109,17 +114,19 @@ Modifier l'url au fur et à mesure du défilement
 		var naturalWidth = 0, 
 			naturalHeight = 0;
 
-		var elem = myItem;
 		var img = myItem.children('.gallery-img').first();
 		var myIndex = myItem.index();
 
 		this.index = function () {
 			return myIndex;
 		}
+		this.elem = function () {
+			return myItem;
+		}
 		this.offset = function (value) {
 			if(typeof value === 'undefined') return offset;
 
-			elem.offset({top:value});
+			myItem.offset({top:value});
 			//img.offset({top:value});
 			offset = value;
 		}
@@ -202,7 +209,8 @@ Modifier l'url au fur et à mesure du défilement
 		this.fadeOut = function (time) {
 			if(typeof time === 'undefined') time = 1000;
 			//On verra pour utiliser directement le css plutôt que jQuery
-			elem.stop().fadeTo(time, 0);
+			myItem.stop().fadeTo(time, 0);myItem.find('.comments-box').removeClass('active');
+			changeComments(false);
 		}
 
 		this.fadeIn = function (time) {
@@ -210,8 +218,31 @@ Modifier l'url au fur et à mesure du défilement
 			//On verra pour utiliser directement le css plutôt que jQuery
 			img.removeClass('fixed-bottom');
 			img.removeClass('fixed-top');
-			elem.stop().fadeTo(time,1);
+			myItem.stop().fadeTo(time,1);
+			changeComments(true);
 			//console.log('i : '+this.index()+' fadeIn '+time)
+		}
+
+		function changeComments(isActive) {
+
+			if(isActive) {
+				/*
+				myItem.find('.comments-box').addClass('active');
+				myItem.find('.respond-block').addClass('active');
+				*/
+				myItem.find('.comments-box').attr('id', 'comments');
+				myItem.find('.respond-block').attr('id', 'respond');
+				myItem.find('.comment-form').attr('id', 'commentform');
+			}
+			else  {
+				/*myItem.find('.comments-box').removeClass('active');
+				myItem.find('.respond-block').removeClass('active');
+				*/
+				myItem.find('.comments-box').attr('id', 'comments-inactive');
+				myItem.find('.respond-block').attr('id', 'respond-inactive');
+				myItem.find('.comment-form').attr('id', 'commentform-inactive');
+			}
+			//console.log('id comments : '+ myItem.find('.comment-form').attr('id')+ ' class: '+ myItem.find('.comment-form').attr('class') );
 		}
 
 		this.fixBottom = function() {
@@ -394,11 +425,12 @@ Modifier l'url au fur et à mesure du défilement
 		    			screen.fullScreenToggle();
 		    		}
 		    		break;
-		    	case 27 : 
+		    	case 27 : 	//Echappe
 		    		autoPlay.stop();
+		    		buttonBar.fullScreenChangeEvent(false);
 		    		console.log('echap');
 		    		break;
-		    	case 32 :
+		    	case 32 : 	//Espace
 		    		e.preventDefault();
 					e.stopPropagation();
 					autoPlay.toggle();
@@ -427,9 +459,12 @@ Modifier l'url au fur et à mesure du défilement
 		}
 
 		function manageTransition(target) {
+
+			//Transition automatique
 			if(isTransitionModeAuto)
 				screen.moveTo(target, 1000);
-			//Gestion manuel par scrolling :
+
+			//Transition manuel par scrolling :
 			else if(pos[target].isTooSmall()) 
 				screen.moveTo(target, 1000);
 			else {
@@ -574,7 +609,7 @@ Modifier l'url au fur et à mesure du défilement
 	function computeOffset() {
 
 		$.each(pos, function(i) {
-			var height = this.height();
+			var height = Math.round(this.height());
 			var wh = $(window).height();			
 			
 			//Calcul limit bot :
@@ -607,7 +642,7 @@ Modifier l'url au fur et à mesure du défilement
 				this.top = pos[i-1].bot + delta;
 			}
 
-			//console.log(i+ ' : bot : '+Math.round(this.bot)+', top : '+Math.round(this.top)+', offset : '+Math.round(this.offset())+", height : "+Math.round(this.height()));
+			//console.log(i+ ' : bot : '+Math.round(this.bot)+', top : '+Math.round(this.top)+', offset : '+Math.round(this.offset())+", height : "+height);
 			
 		});
 
@@ -669,20 +704,22 @@ Modifier l'url au fur et à mesure du défilement
 
 	function manageButton () {
 		var fullScreenButton = $('#gallery-fullscreen-button');
-		var isHelpOpen = false;
+		var helpButton = $('#gallery-help-button');
+		var helpArea = $('#gallery-help-area');
 
 		$('#gallery-escape-button').click(function() {
 			screen.fullScreenDisable();
 		});
 
-		$('#gallery-help-button').click(function() {
-			if(isHelpOpen) {
-				$('.gallery-help').removeClass('open');
-				isHelpOpen = false;
-			}
-			else {
-				$('.gallery-help').addClass('open');
-				isHelpOpen = true;
+		helpButton.click(function() {
+			$(helpArea).toggleClass('open');
+			console.log('test');
+		});
+
+		$(window).click(function (e) {
+			if($('#gallery-help-area:hover').length == 0 &&
+				$('#gallery-help-button:hover').length == 0) {
+				helpArea.removeClass('open');
 			}
 		});
 
@@ -776,6 +813,7 @@ Modifier l'url au fur et à mesure du défilement
 	$(window).on('resize', function() {
 		computeOffset();
 		bar.managePosition();
+		screen.manageResize();
 		});
 	$(window).on('scroll touchmove mousewheel', function(e) {
 		screen.manageScroll(e);

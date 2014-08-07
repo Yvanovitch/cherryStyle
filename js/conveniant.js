@@ -1,8 +1,10 @@
 
 /*
 Gestion automatique des textes intérieurs aux inputs et textarea
+Utilise l'attribue data-value pour cela
+-> Remplacé par placeHolder
 */
-
+/*
 ( function ($) {
 	var fuelInputs = function() {
 		$(':input[type!="hidden"]').each(function(){
@@ -47,7 +49,7 @@ Gestion automatique des textes intérieurs aux inputs et textarea
 	$(window).load(fuelInputs);
 
 } )( jQuery);
-
+*/
 
 /*
 Envoie des commentaires via "Enter"

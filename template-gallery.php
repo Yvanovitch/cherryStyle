@@ -25,7 +25,7 @@ if($images){ ?>
         <div id="gallery-play-button" class="gallery-button" /></div>
         <div id="gallery-fullscreen-button" class="gallery-button" /></div>
     </div>
-    <ul class="gallery-help">
+    <ul id="gallery-help-area">
         <li>Utilisez la barre de navigation en bas pour aller à une photo particulière</li>
         <li>Survolez la partie droite de l'écran pour accéder à la description et aux commentaires</li>
         <li>Touche <kbd>espace</kbd> -> Lecture automatique</li>
