@@ -103,6 +103,8 @@ function cherrystyle_scripts() {
 
 	wp_enqueue_script( 'cherrystyle-full-screen-api', get_template_directory_uri() . '/js/full-screen-api.js', array(), '1.0', true );
 
+	wp_enqueue_script( 'cherrystyle-mouseScroll', get_template_directory_uri() . '/js/mouseScroll.js', array(), '1.0', true );
+
 	wp_enqueue_script( 'cherrystyle-gallery', get_template_directory_uri() . '/js/gallery.js', array(), '1.0', true );
 
 	wp_enqueue_script( 'cherrystyle-conveniant', get_template_directory_uri() . '/js/conveniant.js', array(), '1.0', true );

@@ -1,4 +1,40 @@
 
+
+
+
+
+
+
+
+/*
+Envoie des commentaires via "Enter"
+*/
+( function ($) {
+	$(':input').keypress(function (e) {
+  		if (e.which == 13) {
+  			$(this).closest("form").submit();
+	    	//this.closest("form").submit();
+	    	//return false;
+	  	}
+	});
+}) ( jQuery );
+
+
+
+/*
+Gère l'affichage des commentaires trop long lors du clique sur "..."
+*/
+
+(function ($) {
+	$('.comment-more-button').click(function (e) {
+		$(this).parent().children('.comment-more-content').removeClass('comment-more-content');
+		$(this).css('display','none');
+		e.preventDefault();
+		return false;
+	});
+}) (jQuery);
+
+
 /*
 Gestion automatique des textes intérieurs aux inputs et textarea
 Utilise l'attribue data-value pour cela
@@ -50,31 +86,3 @@ Utilise l'attribue data-value pour cela
 
 } )( jQuery);
 */
-
-/*
-Envoie des commentaires via "Enter"
-*/
-( function ($) {
-	$(':input').keypress(function (e) {
-  		if (e.which == 13) {
-  			$(this).closest("form").submit();
-	    	//this.closest("form").submit();
-	    	//return false;
-	  	}
-	});
-}) ( jQuery );
-
-
-
-/*
-Gère l'affichage des commentaires trop long lors du clique sur "..."
-*/
-
-(function ($) {
-	$('.comment-more-button').click(function (e) {
-		$(this).parent().children('.comment-more-content').removeClass('comment-more-content');
-		$(this).css('display','none');
-		e.preventDefault();
-		return false;
-	});
-}) (jQuery);

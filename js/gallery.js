@@ -10,19 +10,15 @@ TODO :
 //Bloquer le défilement des images avant qu'elle ne dépasse.
 //?Ralentir le défilement des images, comme sur le site -> http://community.saucony.com/kinvara3/
 //Défilement automatique -> http://css-tricks.com/snippets/jquery/smooth-scrolling/ http://www.intacto10years.com/index_start.php
-? Voir site award winner pour barre de défilement
 //Barre de défilement en bas comme sublime
 BOUTON de play/pause, Bulle d'aide, Bouton pour revenir en haut 
 //Quand souris à droite de meta, laisser en hover
-Laisser sur la même page après commentaire
+//Laisser sur la même page après commentaire
 Mettre en fixed même quand l'image n'est pas assez grande pour faire une transition normale
 //?Tester retour arrière si pas assez descendu --> Ralentir le délifement de l'image pour indiquer qu'on y arrive
-Si l'user est sur un mobile, n'envoyer que les petites images, pas les full
-Charger les images de manières asynchrone
 
 //Voir pourquoi Ajaxify ne fonctionne pas sur plusieurs articles en même temps >> http://wordpress.org/support/topic/multiple-comment-forms-on-a-single-page
 //Lier le nouveau form à l'envoi par "Entrer" : http://wordpress.org/plugins/wp-ajaxify-comments/faq/ -> OnAfterUpdateComments
-Charger les commentaires à la demande
 
 Rapide :
 //Quand on fait play, ne compter que le temps nécessaire, pas total
@@ -37,14 +33,12 @@ Rapide :
 Quand user poste un commentaire, afficher à gauche le formulaire pour entrer ses informations perso, puis lui indiquer lesquelles ne sont pas entrée quand il fait entré
 ? Passer à la suivante quand on fait play autoplay
 Choisir avec une variable d'afficher les images portrait redimentionné
-Lorsqu'on a cliqué sur l'aide et qu'on clique à côté, enlever l'aide
-Mettre un flou autour des images
+//Lorsqu'on a cliqué sur l'aide et qu'on clique à côté, enlever l'aide
 //Changer système qui check les inputs par placeHolder -> http://www.scottohara.me/article/mini-demos.html
 
 -> Comments :
 Quand on clique n'importe où dans un champ, toujours entrer en mode édition
-Lorsque le plugin ajaxify recharge, attacher de nouveau les input à jQuery
- --> Faire attention à ce que tout les champs soient remplis
+//Lorsque le plugin ajaxify recharge, attacher de nouveau les input à jQuery
  Utiliser ::before pour ajouter les "*" dans aux champs obligatoires
  //Lorsqu'on clique sur un champ, ne pas cacher le block si la sourie sort
 
@@ -64,9 +58,13 @@ Bug :
 //Corriger l'icône de plein écran
 Affichage de la dernière image lorsqu'elle est en trop petite, manque de marge :s
 //Drôle de marge pour certaines images
-Lorsqu'on utilise la scrollBar, ne pas faire les transition
+//Lorsqu'on utilise la scrollBar, ne pas faire les transition
 
 Plus : 
+Mettre un flou autour des images
+Charger les commentaires à la demande -> Puis envoyer un review à l'auteur du plugin
+Si l'user est sur un mobile, n'envoyer que les petites images, pas les full
+Charger les images de manières asynchrone
 Utiliser un framework MVC !!!
 Plutôt que fadeIn, on pourrait utiliser le css pour gérer la transition avec un timeout pour passer l'élement en display:none;
 ->Voir même velocity.js
@@ -300,13 +298,14 @@ Modifier l'url au fur et à mesure du défilement
 
 	function screenFunc () {
 		var isScrollLocked = false;
+		var hasClickedScrollBar = false;
 		var currentTarget;
 		var st = 0;
 
 		var keysPrevious = [33, 37, 38]
 		var keysNext = [34, 39, 40];
 		var oldScrollTop;
-		var shouldScrollOnImg = false;
+		var shouldScrollOnImg = false;	//Finalement Désactivé, à voir quand l'appliquer vraiment 
 		var isFullScreen = false;
 
 		function moveToComplete () {
@@ -340,6 +339,7 @@ Modifier l'url au fur et à mesure du défilement
 		this.moveTo = function (t, time) {
 			//console.log('move to '+t, time)
 			if(isScrollLocked) return;
+			if(!isTransitionModeAuto) return;
 			if(currentTarget == t) { return;}
 			if(time < 50 ||typeof time === 'undefined') time = transitionScrollTime;
 			if(t >= pos.length) t = pos.length-1;
@@ -354,7 +354,7 @@ Modifier l'url au fur et à mesure du défilement
 	    			target = pos[t].top;
 	    		else 
 	    			target = pos[t].bot - 10;
-	    		shouldScrollOnImg = true;
+	    		//shouldScrollOnImg = true; Fonctionnalité désactivée
 	    	}
 	    	else
 	    		target = pos[t].middle();
@@ -436,7 +436,7 @@ Modifier l'url au fur et à mesure du défilement
 					autoPlay.toggle();
 					break;
 		    }
-		    console.log('keypress : '+e.keyCode);
+		    //console.log('keypress : '+e.keyCode);
 		}
 
 		//Gestion scrolling
@@ -458,15 +458,36 @@ Modifier l'url au fur et à mesure du défilement
 			manageItems();
 		}
 
-		function manageTransition(target) {
+		this.manageScrollBar = function (e) {
 
+		    $('HTML').mousedownScroll(function() {
+		        hasClickedScrollBar = true;
+		        isTransitionModeAuto = false;
+		    });
+			hasClickedScrollBar = true;
+
+			//Gestion du bouton du milieu
+			$(window).on('mousedown', function(e) {
+				if(e.which == 2) {
+					hasClickedScrollBar = true;
+					isTransitionModeAuto = false;
+				}
+			});
+
+		 	$(window).on('mouseup', function (e) {
+		    	if(hasClickedScrollBar) {
+		    		hasClickedScrollBar = false;
+		    		isTransitionModeAuto = true;
+		    	}
+		    });
+		}
+
+		function manageTransition(target) {
 			//Transition automatique
 			if(isTransitionModeAuto)
 				screen.moveTo(target, 1000);
 
 			//Transition manuel par scrolling :
-			else if(pos[target].isTooSmall()) 
-				screen.moveTo(target, 1000);
 			else {
 				prevItem = currentItem;
 				prevItem.fadeOut('slow');
@@ -606,6 +627,10 @@ Modifier l'url au fur et à mesure du défilement
 
 
 
+
+
+
+
 	function computeOffset() {
 
 		$.each(pos, function(i) {
@@ -659,9 +684,7 @@ Modifier l'url au fur et à mesure du défilement
 		var bar = $('.gallery-bar');
 		var cursor = $('.gallery-bar-cursor');
 		var leftCursorBar = parseInt(cursor.css('left'));
-		console.log('left : '+leftCursorBar)
 		var thumbnailWidth = parseInt( $('.gallery-bar-item').css('width') );
-		console.log('widtht '+thumbnailWidth)
 
 		this.manageClick = function() {
 			$('li[class=gallery-bar-item]').click(function(e) {
@@ -808,6 +831,7 @@ Modifier l'url au fur et à mesure du défilement
 		screen.manageScroll();
 		bar.managePosition();
 		bar.manageClick();
+		screen.manageScrollBar();
 	});
 	//Permet de recalculer les images avec les bonnes dimensions
 	$(window).on('resize', function() {
@@ -821,15 +845,8 @@ Modifier l'url au fur et à mesure du défilement
 	});
 	$(window).keydown(screen.manageKey);
 
-	$(document).on("fullscreenchange", function() {
-	    if($(document).fullScreen()){
-	        //Just went into fullscreen
-	        console.log('fullscreen enalble');
-	    }else{
-	        //Just exit fullscreen
-	        console.log('full screen leave');
-	    }
-	});
+
+	
 
 } )(jQuery);
 
