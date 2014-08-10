@@ -14,8 +14,9 @@ TODO :
 BOUTON de play/pause, Bulle d'aide, Bouton pour revenir en haut 
 //Quand souris à droite de meta, laisser en hover
 //Laisser sur la même page après commentaire
-Mettre en fixed même quand l'image n'est pas assez grande pour faire une transition normale
+? Mettre en fixed même quand l'image n'est pas assez grande pour faire une transition normale
 //?Tester retour arrière si pas assez descendu --> Ralentir le délifement de l'image pour indiquer qu'on y arrive
+Dans l'article, afficher d'abord la page normal puis, lorsqu'on clique sur la première photo de la galerie, afficher la galerie
 
 //Voir pourquoi Ajaxify ne fonctionne pas sur plusieurs articles en même temps >> http://wordpress.org/support/topic/multiple-comment-forms-on-a-single-page
 //Lier le nouveau form à l'envoi par "Entrer" : http://wordpress.org/plugins/wp-ajaxify-comments/faq/ -> OnAfterUpdateComments
@@ -30,7 +31,8 @@ Rapide :
 //espace pour lancer diaporama et arrêters
 //Masquer les commentaires si trop long 
 //Récupérer les valeur height et width des images depuis le html
-Quand user poste un commentaire, afficher à gauche le formulaire pour entrer ses informations perso, puis lui indiquer lesquelles ne sont pas entrée quand il fait entré
+//Quand user poste un commentaire, afficher à gauche le formulaire pour entrer ses informations perso, 
+//-> lui indiquer en rouge lesquelles ne sont pas entrée quand il fait entrée : http://www.scottohara.me/article/mini-demos.html
 ? Passer à la suivante quand on fait play autoplay
 Choisir avec une variable d'afficher les images portrait redimentionné
 //Lorsqu'on a cliqué sur l'aide et qu'on clique à côté, enlever l'aide
@@ -735,14 +737,15 @@ Modifier l'url au fur et à mesure du défilement
 		});
 
 		helpButton.click(function() {
-			$(helpArea).toggleClass('open');
-			console.log('test');
+			//helpArea.toggle();
+			helpArea.timedToggleClass();
 		});
 
 		$(window).click(function (e) {
 			if($('#gallery-help-area:hover').length == 0 &&
-				$('#gallery-help-button:hover').length == 0) {
-				helpArea.removeClass('open');
+				$('#gallery-help-button:hover').length == 0 &&
+				helpArea.isHidden()	) {
+				helpArea.timedToggleClass();
 			}
 		});
 
@@ -849,82 +852,3 @@ Modifier l'url au fur et à mesure du défilement
 	
 
 } )(jQuery);
-
-
-
-
-
-
-
-
-
-
-
-//Gestion de l'apparition d'un bloc.
-//Si on clique sur le bloc, il apparaît
-//Si on passe la sourie 0.2s sur la zone, on fait apparaître le bloc
-//Si on sort la sourie plus de 0.8s de la zone, on fait disparaître le bloc
-//Si on clique hors du bloc, il disparaît
-//Si le focus est à l'intérieur, il reste ouvert
-
-(function($) {
-	var enterTime = 150;
-	var leaveTime = 400;
-
-	function areaManager (t, classN) {
-		var opened = false;
-		var isIn = false;
-		var className = classN;
-		var target = t;
-
-		//Si on clique en dehors
-		$(window).click(function() {
-			if(isIn)
-				open();
-			else 
-				close();
-		})
-
-		this.setClass = function (c) {
-			className = c;
-		}
-
-		function open () {
-			if(isIn) {
-				target.addClass(className);
-				opened = true;
-			}
-		}
-
-		function close () {
-			if(!isIn) {
-				opened = false;
-				target.removeClass(className);
-			}
-		}
-
-	  	this.hover = function (e) {
-			if(e.type === 'mouseenter') {
-				if(!opened)
-					setTimeout(open, enterTime);
-				isIn = true;
-			} 
-			else {
-				if(opened && target.find(":focus").length == 0 ) 
-					setTimeout(close, leaveTime);
-				isIn = false;
-			}
-		}
-	}
-/*
-	var obj = new foo($('.gallery-arrow'));
-	obj.setClass('gallery-arrow-shoot');
-	$('.gallery-meta-box').hover(obj.myHover);
-*/
-	var metaArea = new areaManager($('.gallery-meta-area'), 'gallery-meta-area-open');
-	$('.gallery-meta-area').hover(metaArea.hover);
-
-	var barArea = new areaManager($('.gallery-bar-area'), 'gallery-bar-area-open');
-	$('.gallery-bar-area').hover(barArea.hover);
-
-}) (jQuery);

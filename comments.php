@@ -101,7 +101,8 @@ if ( post_password_required() ) {
 		    'fields' => array(
 
 			    'author' =>
-			      '<p class="comment-form-author">' .
+			      '<div class="comment-form-information">
+			      <p class="comment-form-author">' .
 			      '<label for="author">' . __( 'Name', 'domainreference' ) . '</label> ' .
 			      ( $req ? '<span class="required">*</span>' : '' ) .
 			      '<input id="author" name="author" type="text" required placeHolder="Entrez votre nom..." size="30"' . $aria_req . ' /></p>',
@@ -114,7 +115,8 @@ if ( post_password_required() ) {
 			    'url' =>
 			      '<p class="comment-form-url"><label for="url">' .
 			      __( 'Website', 'domainreference' ) . '</label>' .
-			      '<input id="url" name="url" type="url" placeHolder="Entrez votre site web..." size="30" /></p>'
+			      '<input id="url" name="url" type="url" placeHolder="Entrez votre site web..." size="30" /></p>
+			      </div>'
 			    ) 
 
 		    );

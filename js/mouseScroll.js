@@ -65,7 +65,6 @@ var RECT = function(){
 }
 
 function inRect(rect, x, y){
-    console.log('rect : '+rect.top, rect.right, rect.bottom, rect.left + ' x y : '+x, y)
     return (y >= rect.top && y <= rect.bottom) &&
         (x >= rect.left && x <= rect.right)
 }

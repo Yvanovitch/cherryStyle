@@ -700,7 +700,7 @@ a:active {
 }
 .required {
     float:left;
-    left:12px;
+    left:8px;
     top:7px;
     position:absolute;
 }
@@ -709,7 +709,31 @@ a:active {
     float:right;
     margin-top:6px;
     position:absolute;
-    left:35px;
+    left:30px;
+}
+
+.comment-form-information {
+	position:absolute;
+	display:none;
+	left: -255px;
+	bottom:0px;
+	 background-color:rgba(255,187,79,0.8);
+	padding-top:10px;
+	border-radius:5px;
+	opacity:0;
+	transition:opacity 450ms ease-in-out;
+}
+.comment-form-information.open {
+	opacity:1;
+}
+
+.comment-form-information input:
+:invalid {
+	box-shadow: 0 0 1.5px 1px rgba(255,0,0,0.7);
+}
+
+.comment-form-information input:required:valid {
+	box-shadow: 0 0 1.5px 1px green;
 }
 
 /*-----------------------------------------------------------
@@ -808,11 +832,11 @@ object {
     transition:background-color 450ms ease;
     overflow:hidden;
 }
-.gallery-meta-area-open .gallery-meta-box{
+.gallery-meta-area.open .gallery-meta-box{
     opacity:1;
     background-color:rgba(255,187,79,0.8);
 }
-.gallery-meta-area-open .gallery-meta{
+.gallery-meta-area.open .gallery-meta{
     opacity:1;
 }
 .gallery-meta {
@@ -848,11 +872,13 @@ object {
 */
 @keyframes arrowShoot {
     from { top: 55px; opacity: 1;}
-    to {top : 300px; opacity:0;}
+    99% {top : 300px; opacity:0;}
+		to	{top : 3000px; opacity:0;}
 }
 @-webkit-keyframes arrowShoot {
     from { top: 55px; opacity: 1;}
-    to {top : 300px; opacity:0;}
+    99% {top : 300px; opacity:0;}
+		to	{top : 3000px; opacity:0;}
 }
 @keyframes arrowAppear {
     from { top: 55px; opacity:0 ;}
@@ -873,13 +899,17 @@ object {
          -o-animation: ease arrowAppear 700ms forwards 600ms;
     animation : ease arrowAppear 700ms forwards 600ms;
 }
-.gallery-meta-area-open .gallery-arrow {
+.gallery-meta-area.open .gallery-arrow {
     -webkit-animation: arrowShoot 0.3s linear forwards ;
        -moz-animation: arrowShoot 0.3s linear forwards ;
          -o-animation: arrowShoot 0.3s linear forwards ;
     animation: arrowShoot 0.3s linear forwards ;
     
 }
+
+/*
+Other
+*/
 .gallery-img {
 	text-align:middle;
     z-index:1;
@@ -933,7 +963,7 @@ object {
     -o-transition:  bottom  450ms ease-in-out;
     transition: bottom 450ms ease-in-out;
 }
-.gallery-bar-area-open .gallery-bar {
+.gallery-bar-area.open .gallery-bar {
     opacity:1;
     bottom:0px;
     -webkit-transition: all 450ms ease-in-out;
@@ -1002,7 +1032,7 @@ object {
     -o-animation:cursorDown 1.4s forwards;
     animation:cursorDown 1.4s forwards;
 }
-.gallery-bar-area-open .gallery-bar-cursor {
+.gallery-bar-area.open .gallery-bar-cursor {
     -webkit-animation: cursorUp 0.75s forwards ;
     -moz-animation: cursorUp 0.75s forwards ;
     -o-animation: cursorUp 0.75s forwards ;
@@ -1071,8 +1101,7 @@ Barre de bouton
     border-radius:10px;
     padding:5px 5px 5px 20px;
     
-    top:-160px;
-    display:none;
+    top:-200px;
     -webkit-transition:top 450ms ease-in-out;
     -moz-transition: top 450ms ease-in-out;
     -o-transition: top 450ms ease-in-out;
@@ -1080,7 +1109,6 @@ Barre de bouton
 }
 
 #gallery-help-area.open {
-    display:block;
     top:60px;
 }
 body {

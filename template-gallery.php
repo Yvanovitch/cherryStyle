@@ -21,7 +21,7 @@ if($images){ ?>
 <div id="cherry-gallery">
     <div class="gallery-button-area">
         <div id="gallery-escape-button" class="gallery-button"/></div>
-        <div id="gallery-help-button" class="gallery-button" /></div>
+        <div id="gallery-help-button" class="gallery-button" aria-expanded="false" aria-controls="gallery-help-area"/></div>
         <div id="gallery-play-button" class="gallery-button" /></div>
         <div id="gallery-fullscreen-button" class="gallery-button" /></div>
     </div>
