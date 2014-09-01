@@ -37,6 +37,7 @@ Rapide :
 Choisir avec une variable d'afficher les images portrait redimentionné
 //Lorsqu'on a cliqué sur l'aide et qu'on clique à côté, enlever l'aide
 //Changer système qui check les inputs par placeHolder -> http://www.scottohara.me/article/mini-demos.html
+Mettre un carré-flêche cliquable pour indiquer l'ouverture du panneau information user
 
 -> Comments :
 Quand on clique n'importe où dans un champ, toujours entrer en mode édition
@@ -61,6 +62,8 @@ Bug :
 Affichage de la dernière image lorsqu'elle est en trop petite, manque de marge :s
 //Drôle de marge pour certaines images
 //Lorsqu'on utilise la scrollBar, ne pas faire les transition
+Lorsqu'on passe de lecture on / off, faire attention à la redimention de la barre en bas
+Apparition de la flêche commentaire Attention si titre trop long 
 
 Plus : 
 Mettre un flou autour des images
